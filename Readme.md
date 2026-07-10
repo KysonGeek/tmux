@@ -4,7 +4,7 @@ This is my tmux configuration.
 ## Install
 ```shell
 brew install tmux
-git clone https://github.com/chaozwn/tmux.git ~/.config/tmux
+git clone https://github.com/KysonGeek/tmux.git ~/.config/tmux
 ```
 
 Then
