@@ -13,8 +13,6 @@ set-option -g status-position top
 # action key
 unbind C-b
 set -g prefix C-a
-# 双击 C-a 发送真正的 C-a 给应用（恢复 shell 行首功能）
-bind C-a send-prefix
 
 # default shell
 set -g default-shell "$SHELL"
@@ -49,22 +47,18 @@ set -g display-time 2000
 
 set -g status-interval 1
 
-# 判断当前 pane 是否运行 vim/nvim/fzf，用于快捷键透传
-is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?(g?\.?(view|n?vim?x?)(-wrapped)?(diff)?|fzf)'"
-
 # window management
-# C-w 在 vim/nvim/fzf 内透传（保留 nvim 的窗口命令），否则新建窗口
-bind -n C-w if-shell "$is_vim" 'send-keys C-w' 'new-window -c "#{pane_current_path}"'
+bind -n C-w new-window -c "#{pane_current_path}"
 # break pane to window
-bind -n M-b break-pane
+bind -n M-b break-pane 
 # close self pane
 bind -n M-c kill-pane
-# close other pane（批量销毁，加确认）
-bind -n M-o confirm-before -p "kill other panes? (y/n)" "kill-pane -a"
-# close window（加确认，避免误触 C-q 流控键丢窗口）
-bind -n C-q confirm-before -p "kill-window #W? (y/n)" kill-window
-# close other window（批量销毁，加确认）
-bind -n C-e confirm-before -p "kill other windows? (y/n)" "kill-window -a"
+# close other pane
+bind -n M-o kill-pane -a
+# close window
+bind -n C-q kill-window
+# close other window
+bind -n C-e kill-window -a
 # switch to other window
 bind -n M-h previous-window
 bind -n M-l next-window
@@ -116,7 +110,7 @@ set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 
 source-file ~/.config/tmux/tokyonight/tokyonight_moon.tmux
 
-# is_vim 已在文件前部定义
+is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?(g?\.?(view|n?vim?x?)(-wrapped)?(diff)?|fzf)'"
 
 #bind-key -n 'M-h' if-shell "$is_vim" 'send-keys M-h' { if -F '#{pane_at_left}' '' 'select-pane -L' }
 #bind-key -n 'M-j' if-shell "$is_vim" 'send-keys M-j' { if -F '#{pane_at_bottom}' '' 'select-pane -D' }
